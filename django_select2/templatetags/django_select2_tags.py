@@ -18,7 +18,7 @@ def import_js(light=0):
 
 @register.simple_tag(name='django_select2_js')
 def select2_js(light=0):
-	return '''<script type="javascript" name='django-select2'>
+	return '''<script type="text/javascript" name='django-select2'>
         {}
     </script>'''.format(u'\n'.join(_widgets))
 
