@@ -5,7 +5,7 @@ from django.views.generic import View
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
 
-from .util import get_field, is_valid_id
+from utils import get_field, is_valid_id
 
 NO_ERR_RESP = 'nil'
 """

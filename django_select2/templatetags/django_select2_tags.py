@@ -2,7 +2,7 @@ from django import template
 
 register = template.Library()
 
-from ..widgets import HeavySelect2Widget, Select2Widget
+from django_select2.widgets import HeavySelect2Widget, Select2Widget
 
 __proxy_widget = HeavySelect2Widget(data_view="xyz")
 __proxy_light_widget = Select2Widget()
