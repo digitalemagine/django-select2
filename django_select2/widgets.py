@@ -11,42 +11,44 @@ from django.utils.safestring import mark_safe
 from django.core.urlresolvers import reverse
 from django.utils.datastructures import MultiValueDict, MergeDict
 
-from .util import render_js_script, convert_to_js_string_arr, JSVar, JSFunction, JSFunctionInContext, \
+from utils import render_js_script, convert_to_js_string_arr, JSVar, JSFunction, JSFunctionInContext, \
     convert_dict_to_js_map, convert_to_js_arr
 
 from . import __RENDER_SELECT2_STATICS as RENDER_SELECT2_STATICS
 
 logger = logging.getLogger(__name__)
 
+JS_PATH =   'js/django-select2'
+CSS_PATH = 'css/django-select2'
 
 def get_select2_js_libs():
     from django.conf import settings
     if settings.configured and settings.DEBUG:
-        return ('js/select2.js', )
+        return (JS_PATH + '/select2.js', )
     else:
-        return ('js/select2.min.js', )
+        return (JS_PATH + '/select2.min.js', )
 
 def get_select2_heavy_js_libs():
     libs = get_select2_js_libs()
 
     from django.conf import settings
     if settings.configured and settings.DEBUG:
-        return libs + ('js/heavy_data.js', )
+        return libs + (JS_PATH + '/heavy_data.js', )
     else:
-        return libs + ('js/heavy_data.min.js', )
+        return libs + (JS_PATH + '/heavy_data.min.js', )
 
 def get_select2_css_libs(light=False):
     from django.conf import settings
     if settings.configured and settings.DEBUG:
         if light:
-            return ('css/select2.css',)
+            return (CSS_PATH + '/select2.css',)
         else:
-            return ('css/select2.css', 'css/extra.css', )
+            return (CSS_PATH + '/select2.css', CSS_PATH + '/extra.css', )
     else:
         if light:
-            return ('css/select2.min.css',)
+            return (CSS_PATH + '/select2.min.css',)
         else:
-            return ('css/all.min.css', )
+            return (CSS_PATH + '/all.min.css', )
 
 ### Light mixin and widgets ###
 
@@ -312,7 +314,7 @@ class HeavySelect2Mixin(Select2Mixin):
         * minimumInputLength: ``2``
         * initSelection: ``JSFunction('django_select2.onInit')``
         * ajax:
-            * dataType: ``'json'``
+            * dataType: ``JS_PATH + 'on'``
             * quietMillis: ``100``
             * data: ``JSFunctionInContext('django_select2.get_url_params')``
             * results: ``JSFunctionInContext('django_select2.process_results')``
@@ -356,7 +358,7 @@ class HeavySelect2Mixin(Select2Mixin):
 
                 3. Otherwise, check the cached results. When the user searches in the fields then all the returned
                 responses from server, which has the value and label mapping, are cached by ``heavy_data.js``.
-                
+
         :type userGetValTextFuncName: :py:obj:`str`
 
         .. tip:: Since version 3.2.0, cookies or localStorage are no longer checked or used. All
@@ -374,7 +376,7 @@ class HeavySelect2Mixin(Select2Mixin):
             raise ValueError('data_view or data_url is required')
 
         self.options['ajax'] = {
-            'dataType': 'json',
+            'dataType': JS_PATH + 'on',
             'quietMillis': 100,
             'data': JSFunctionInContext('django_select2.get_url_params'),
             'results': JSFunctionInContext('django_select2.process_results'),
