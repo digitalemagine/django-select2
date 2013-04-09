@@ -1,9 +1,20 @@
 Django-Select2
 ==============
 
-This is a [Django](https://www.djangoproject.com/) integration of [Select2](http://ivaynberg.github.com/select2/).
+This is a fork of [django-select2](https://github.com/applegrew/django-select2), a [Django](https://www.djangoproject.com/) integration of [Select2](http://ivaynberg.github.com/select2/).
 
 The app includes Select2 driven Django Widgets and Form Fields.
+
+What's different?
+-----------------
+
+1. All javascript is added... where you want!
+   Position all django-select2 generated javascript with the `{% django_select2_js %}` templatetag.
+   This way you can put it just before `</body>`, preferred.
+   It's possible and easy to keep the previous behaviour with a settings, but I didn't prepare a setting for it yet.
+2. PEP008 compliant imports
+3. Versioning with select2 version
+4. I just wanted to have it easy to update myself...
 
 Installation
 ============
@@ -18,15 +29,56 @@ Installation
 
         python manage.py collectstatic
 
+Usage
+=====
+
+Checkout the documentation for more information. Otherwise the simplest and favored way to use it is:
+
+form.py
+-------
+
+class YourForm(forms.ModelForm):
+
+    class Meta:
+        model = YourModel
+
+        widgets = {
+            'some_model_field': Select2Widget()
+        }
+
+basic_template.html
+-------------------
+
+    .... extend something ...
+    {% load django_template_tags %}
+
+    ...
+
+    {% block css %}
+    <!-- your CSS block -->
+    ...
+    {% import_django_select2_css %}
+    ...
+    {% endblock css %}
+
+    ...
+    {% block js %}
+    <!-- your JS block -->
+    {% endblock js %}
+
+
+We suggest using django-compressor.
+
+
 Documentation
 =============
 
-Documentation available at http://django-select2.readthedocs.org/.
+Full documentation available at http://django-select2.readthedocs.org/ (this is the original, not the fork, I haven't made this on RTD yet.)
 
 More details
 ============
 
-More details can be found on my blog at - http://blog.applegrew.com/2012/08/django-select2/.
+More details can be found on the original blog at - http://blog.applegrew.com/2012/08/django-select2/.
 
 External Dependencies
 =====================
@@ -48,6 +100,12 @@ Special Thanks
 
 Changelog Summary
 =================
+
+### v5.0.0-3.3.2
+Select2 updated to 3.3.2
+
+### v5.0.0-3.3.1
+The first fork
 
 ### v4.0.0
 

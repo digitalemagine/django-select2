@@ -77,7 +77,7 @@ The view - `Select2View`, exposed here is meant to be used with 'Heavy' fields a
 import logging
 logger = logging.getLogger(__name__)
 
-__version__ = "4.0.0"
+__version__ = "5.0.0:3.3.2" # new versioning shows select2 embedded version!
 
 __RENDER_SELECT2_STATICS = False
 __ENABLE_MULTI_PROCESS_SUPPORT = False

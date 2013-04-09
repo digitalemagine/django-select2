@@ -21,9 +21,23 @@ logger = logging.getLogger(__name__)
 JS_PATH =   'js/django-select2'
 CSS_PATH = 'css/django-select2'
 
+COMPRESSED = False # i use django compressed already. And I don't think I want to remember to compile those...
+
+_widgets = []
+
+def render_widget_js(inner_code, in_place=False):
+    """
+    the widget script can be rendered 'in place' (right after the html element) or,
+    much better!, in a selected location determined by the `{% django_select2_js %}` template tag
+    """
+    if in_place:
+        return render_js_script(inner_code)
+    _widgets.append(inner_code)
+    return '' # do not append anything here!
+
 def get_select2_js_libs():
     from django.conf import settings
-    if settings.configured and settings.DEBUG:
+    if settings.configured and settings.DEBUG or not COMPRESSED:
         return (JS_PATH + '/select2.js', )
     else:
         return (JS_PATH + '/select2.min.js', )
@@ -32,14 +46,14 @@ def get_select2_heavy_js_libs():
     libs = get_select2_js_libs()
 
     from django.conf import settings
-    if settings.configured and settings.DEBUG:
+    if settings.configured and settings.DEBUG or not COMPRESSED:
         return libs + (JS_PATH + '/heavy_data.js', )
     else:
         return libs + (JS_PATH + '/heavy_data.min.js', )
 
 def get_select2_css_libs(light=False):
     from django.conf import settings
-    if settings.configured and settings.DEBUG:
+    if settings.configured and settings.DEBUG or not COMPRESSED:
         if light:
             return (CSS_PATH + '/select2.css',)
         else:
@@ -182,7 +196,7 @@ class Select2Mixin(object):
         :rtype: :py:obj:`unicode`
         """
         if id_:
-            return render_js_script(self.render_inner_js_code(id_, *args))
+            return render_widget_js(self.render_inner_js_code(id_, *args))
         return u''
 
     def render_inner_js_code(self, id_, *args):
@@ -294,7 +308,7 @@ class MultipleSelect2HiddenInput(forms.TextInput):
                 jscode = u"$('#%s').val(django_select2.convertArrToStr(%s));" \
                     % (id_, convert_to_js_arr(value, id_))
             jscode += u"django_select2.initMultipleHidden($('#%s'));" % id_
-            s += render_js_script(jscode)
+            s += render_widget_js(jscode)
         return s
 
     def value_from_datadict(self, data, files, name):

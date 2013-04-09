@@ -3,6 +3,7 @@ from django import template
 register = template.Library()
 
 from django_select2.widgets import HeavySelect2Widget, Select2Widget
+from django_select2.widgets import _widgets
 
 __proxy_widget = HeavySelect2Widget(data_view="xyz")
 __proxy_light_widget = Select2Widget()
@@ -15,6 +16,11 @@ def import_js(light=0):
 	else:
 	    return u'\n'.join(__proxy_widget.media.render_js())
 
+@register.simple_tag(name='django_select2_js')
+def select2_js(light=0):
+	return '''<script type="javascript" name='django-select2'>
+        {}
+    </script>'''.format(u'\n'.join(_widgets))
 
 @register.simple_tag(name='import_django_select2_css')
 def import_css(light=0):

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://www.netbeans.org/ns/project/1">
+    <type>org.netbeans.modules.python.project</type>
+    <configuration>
+        <data xmlns="http://nbpython.dev.java.net/ns/php-project/1">
+            <name>django-select2</name>
+            <sources>
+                <root id="django_select2.dir"/>
+                <root id="docs.dir"/>
+            </sources>
+            <tests>
+                <root id="testapp.dir"/>
+            </tests>
+        </data>
+    </configuration>
+</project>
