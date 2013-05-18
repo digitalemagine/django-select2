@@ -309,7 +309,7 @@ class MultipleSelect2HiddenInput(forms.TextInput):
                     % (id_, convert_to_js_arr(value, id_))
             jscode += u"django_select2.initMultipleHidden($('#%s'));" % id_
             s += render_widget_js(jscode)
-        return s
+        return mark_safe(s)
 
     def value_from_datadict(self, data, files, name):
         if isinstance(data, (MultiValueDict, MergeDict)):
