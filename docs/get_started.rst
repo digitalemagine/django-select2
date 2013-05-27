@@ -5,6 +5,14 @@ Get Started
 Overview
 --------
 
+The Django Select2 app provides easy integration of Select2 widgets into your django project.
+This was initially created by https://github.com/applegrew/django-select2 and forked in  to provide:
+
+ * placeholder to writeout javascript (eg. so that it's all in the page bottom AFTER your includes)
+
+
+Also I should check: https://github.com/ouhouhsami/django-select2light since I use floppyforms. And maybe TastyPie or DjangoRestFramework in any case.
+
 .. automodule:: django_select2
     :members:
 

@@ -1,8 +1,8 @@
 ===========================
-Django-Select2 Presentation
+Django-Select2 Introduction
 ===========================
 
-Considering that the documentation is not extremely rich, the original author's blog post is already extremely enlightning:
+The documentation is not extremely rich, but the original author's blog post is extremely enlightning:
 
 http://blog.applegrew.com/2012/08/django-select2/
 
@@ -66,11 +66,11 @@ DJANGO-SELECT2 FIELDS
 
 The following fields are available in Django-Select2.
 
- * Select2ChoiceField – Uses Select2Widget.
- * Select2MultipleChoiceField – Uses Select2MultipleWidget.
- * HeavySelect2ChoiceField – Uses HeavySelect2Widget.
- * HeavySelect2MultipleChoiceField – Uses HeavySelect2MultipleWidget.
- * ModelSelect2Field – Uses Select2ChoiceField. It additionally requires queryset argument. It similar to Django’s ModelChoiceField.
- * AutoSelect2Field – Uses HeavySelect2ChoiceField. Auto register’s itself with AutoResponseView.
- * AutoModelSelect2Field – Similar to AutoSelect2Field, but like ModelSelect2Field, normalizes values to Django model objects.
+* Select2ChoiceField – Uses Select2Widget.
+* Select2MultipleChoiceField – Uses Select2MultipleWidget.
+* HeavySelect2ChoiceField – Uses HeavySelect2Widget.
+* HeavySelect2MultipleChoiceField – Uses HeavySelect2MultipleWidget.
+* ModelSelect2Field – Uses Select2ChoiceField. It additionally requires queryset argument. It similar to Django’s ModelChoiceField.
+* AutoSelect2Field – Uses HeavySelect2ChoiceField. Auto register’s itself with AutoResponseView.
+* AutoModelSelect2Field – Similar to AutoSelect2Field, but like ModelSelect2Field, normalizes values to Django model objects.
 

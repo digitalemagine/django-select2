@@ -10,8 +10,10 @@ Contents:
 
 .. toctree::
 
-   get_started
-   reference
+    get_started
+    introduction
+    examples
+    reference
 
 Indices and tables
 ==================
