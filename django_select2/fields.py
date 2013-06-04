@@ -421,10 +421,13 @@ class HeavySelect2FieldBaseMixin(object):
         :param data_view: A :py:class:`~.views.Select2View` sub-class which can respond to this widget's Ajax queries.
         :type data_view: :py:class:`django.views.generic.base.View` or None
 
+        :param data_url: Url which will respond to Ajax queries with JSON object.
+        :type data_url: :py:obj:`str` or None
+
         :param widget: A widget instance.
         :type widget: :py:class:`django.forms.widgets.Widget` or None
 
-        .. warning:: Either of ``data_view`` or ``widget`` must be specified, else :py:exc:`ValueError` would
+        .. warning:: Either of ``data_view``, ``data_url`` or ``widget`` must be specified, else :py:exc:`ValueError` would
             be raised.
 
         """
@@ -433,11 +436,12 @@ class HeavySelect2FieldBaseMixin(object):
             t1 = util.timer_start('HeavySelect2FieldBaseMixin.__init__')
 
         data_view = kwargs.pop('data_view', None)
+        data_url = kwargs.pop('data_url', None)
         choices = kwargs.pop('choices', [])
 
         kargs = {}
         if kwargs.get('widget', None) is None:
-            kargs['widget'] = self.widget(data_view=data_view)
+            kargs['widget'] = self.widget(data_view=data_view, data_url=data_url)
 
         kargs.update(kwargs)
         super(HeavySelect2FieldBaseMixin, self).__init__(*args, **kargs)

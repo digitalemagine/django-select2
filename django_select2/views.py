@@ -43,6 +43,11 @@ class Select2View(JSONResponseMixin, View):
 
     .. note:: Only `GET <http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html#sec9.3>`_ Http requests are supported.
     """
+    PAGE_SIZE = 100 # default
+    skip_empty = True
+
+    def __init__(self, skip_empty=True):
+        self.skip_empty = skip_empty
 
     def dispatch(self, request, *args, **kwargs):
         try:
@@ -53,16 +58,20 @@ class Select2View(JSONResponseMixin, View):
 
     def get(self, request, *args, **kwargs):
         if request.method == 'GET':
-            term = request.GET.get('term', None)
-            if term is None:
-                return self.render_to_response(self._results_to_context(('missing term', False, [], )))
-            if not term:
-                return self.render_to_response(self._results_to_context((NO_ERR_RESP, False, [], )))
-
+            term = request.GET.get('term', request.GET.get('q', None))
+            page_size = int(request.GET.get('max', request.GET.get('page_size', self.PAGE_SIZE)))
+            if self.skip_empty:
+                if term is None:
+                    return self.render_to_response(self._results_to_context(('missing term', False, [], )))
+                if not term:
+                    return self.render_to_response(self._results_to_context((NO_ERR_RESP, False, [], )))
             try:
                 page = int(request.GET.get('page', None))
                 if page <= 0:
                     page = -1
+            except TypeError:
+                # if there's no page, let start from page 1
+                page = 1
             except ValueError:
                 page = -1
             if page == -1:
@@ -73,7 +82,7 @@ class Select2View(JSONResponseMixin, View):
 
         return self.render_to_response(
             self._results_to_context(
-                self.get_results(request, term, page, context)
+                self.get_results(request, term, page, context, page_size)
                 )
             )
 
@@ -127,7 +136,7 @@ class Select2View(JSONResponseMixin, View):
         """
         pass
 
-    def get_results(self, request, term, page, context):
+    def get_results(self, request, term, page, context, page_size):
         """
         Returns the result for the given search ``term``.
 
