@@ -88,7 +88,7 @@ from .widgets import Select2Widget, Select2MultipleWidget,\
     HeavySelect2Widget, HeavySelect2MultipleWidget, AutoHeavySelect2Widget, \
     AutoHeavySelect2MultipleWidget, AutoHeavySelect2Mixin
 from .views import NO_ERR_RESP
-from .util import extract_some_key_val
+from .utils import extract_some_key_val
 
 
 ### Light general fields ###
