@@ -25,7 +25,7 @@ class AutoViewFieldMixin(object):
 
             .. tip::
                 This mixin uses full class name of the field to register itself. This is
-                used like key in a :py:obj:`dict` by :py:func:`.util.register_field`.
+                used like key in a :py:obj:`dict` by :py:func:`.utils.register_field`.
 
                 If that key already exists then the instance is not registered again. So, eventually
                 all instances of an Auto field share one instance to respond to the Ajax queries for
@@ -41,11 +41,11 @@ class AutoViewFieldMixin(object):
         if logger.isEnabledFor(logging.INFO):
             logger.info("Registering auto field: %s", name)
 
-        from . import util
+        from . import utils
 
-        rf = util.register_field
+        rf = utils.register_field
         if logger.isEnabledFor(logging.DEBUG):
-            rf = util.timer(rf)
+            rf = utils.timer(rf)
 
         id_ = rf(name, self)
         self.field_id = id_
@@ -433,7 +433,7 @@ class HeavySelect2FieldBaseMixin(object):
         """
         from . import util
         if logger.isEnabledFor(logging.DEBUG):
-            t1 = util.timer_start('HeavySelect2FieldBaseMixin.__init__')
+            t1 = utils.timer_start('HeavySelect2FieldBaseMixin.__init__')
 
         data_view = kwargs.pop('data_view', None)
         data_url = kwargs.pop('data_url', None)
@@ -457,15 +457,15 @@ class HeavySelect2FieldBaseMixin(object):
             self.widget.field_id = self.field_id
 
         if logger.isEnabledFor(logging.DEBUG):
-            t2 = util.timer_start('HeavySelect2FieldBaseMixin.__init__:choices initialization')
+            t2 = utils.timer_start('HeavySelect2FieldBaseMixin.__init__:choices initialization')
 
         # ModelChoiceField will set self.choices to ModelChoiceIterator
         if choices and not (hasattr(self, 'choices') and isinstance(self.choices, forms.models.ModelChoiceIterator)):
             self.choices = choices
 
         if logger.isEnabledFor(logging.DEBUG):
-            util.timer_end(t2)
-            util.timer_end(t1)
+            utils.timer_end(t2)
+            utils.timer_end(t1)
 
 class HeavyChoiceField(ChoiceMixin, forms.Field):
     """
