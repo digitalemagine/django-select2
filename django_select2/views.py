@@ -36,23 +36,34 @@ class JSONResponseMixin(object):
 
 class Select2View(JSONResponseMixin, View):
     """
-    Base view which is designed to respond with JSON to Ajax queries from heavy widgets/fields.
+    Base view designed to respond with JSON to Ajax queries from heavy widgets/fields.
 
-    Although the widgets won't enforce the type of data_view it gets, but it is recommended to
-    sub-class this view instead of creating a Django view from scratch.
+    Although the widgets won't enforce the type of data_view it gets,
+    it is recommended to sub-class this view instead of creating a Django view from scratch.
+
+    This view takes care of pagination and return a json in the format:
+
+        {
+            results: [list],
+            err: 'error message',
+            more: 'more results available in other pages',
+            page: 'current page',
+        }
 
     .. note:: Only `GET <http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html#sec9.3>`_ Http requests are supported.
     """
-    PAGE_SIZE = 100 # default
-    skip_empty = True
+    PAGE_SIZE = 100     # default number of results per page
+    skip_empty = False  # by default, perform a search even when no key is specified
+                        # - since select2 is paginated, this is a sensible default imho
 
-    def __init__(self, skip_empty=True):
+    def __init__(self, skip_empty=False):
         self.skip_empty = skip_empty
 
     def dispatch(self, request, *args, **kwargs):
         try:
             self.check_all_permissions(request, *args, **kwargs)
-        except Exception, e:
+        except Exception as e:
+            print "Exception:", e, e.__dict__
             return self.respond_with_exception(e)
         return super(Select2View, self).dispatch(request, *args, **kwargs)
 
@@ -62,9 +73,9 @@ class Select2View(JSONResponseMixin, View):
             page_size = int(request.GET.get('max', request.GET.get('page_size', self.PAGE_SIZE)))
             if self.skip_empty:
                 if term is None:
-                    return self.render_to_response(self._results_to_context(('missing term', False, [], )))
+                    return self.render_to_response(self._results_to_context('missing term'))
                 if not term:
-                    return self.render_to_response(self._results_to_context((NO_ERR_RESP, False, [], )))
+                    return self.render_to_response(self._results_to_context(NO_ERR_RESP, False, [], ))
             try:
                 page = int(request.GET.get('page', None))
                 if page <= 0:
@@ -75,14 +86,14 @@ class Select2View(JSONResponseMixin, View):
             except ValueError:
                 page = -1
             if page == -1:
-                return self.render_to_response(self._results_to_context(('bad page no.', False, [], )))
+                return self.render_to_response(self._results_to_context('bad page no.'))
             context = request.GET.get('context', None)
         else:
-            return self.render_to_response(self._results_to_context(('not a get request', False, [], )))
+            return self.render_to_response(self._results_to_context('not a get request'))
 
         return self.render_to_response(
             self._results_to_context(
-                self.get_results(request, term, page, context, page_size)
+                *self.get_results(request, term, page, context, page_size), page = page  # netbeans does not like it, but it's legal python
                 )
             )
 
@@ -94,30 +105,42 @@ class Select2View(JSONResponseMixin, View):
             else 400.
         :rtype: HttpResponse
         """
+        msg = str(e)
         if isinstance(e, Http404):
             status = 404
+            msg = msg or "Not Found"
+        elif isinstance(e, PermissionDenied):
+            status = 403
+            msg = msg or "Permission Denied"
         else:
             status = getattr(e, 'status_code', 400)
         return self.render_to_response(
-            self._results_to_context((str(e), False, [],)),
+#            self._results_to_context(str(e)),  # looks like there's no message in the exception!
+            self._results_to_context(msg),
             status=status
             )
 
-    def _results_to_context(self, output):
-        err, has_more, results = output
+    def _results_to_context(self, err, has_more=False, results=[], page=None):
+
+        if err != NO_ERR_RESP:
+            results = locals().copy()
+            del results['self']
+            return results
+
         res = []
-        if err == NO_ERR_RESP:
-            for result in results:
-                id_, text = result[:2]
-                if len(result)>2:
-                    extra_data = result[2]
-                else:
-                    extra_data = {}
-                res.append(dict(id=id_, text=text, **extra_data))
+
+        for result in results:
+            id_, text = result[:2]
+            if len(result)>2:
+                extra_data = result[2]
+            else:
+                extra_data = {}
+            res.append(dict(id=id_, text=text, **extra_data))
         return {
             'err': err,
             'more': has_more,
             'results': res,
+            'page': page,
         }
 
     def check_all_permissions(self, request, *args, **kwargs):
