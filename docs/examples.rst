@@ -76,6 +76,8 @@ A simple way is to extend the included Select2View
 
 Then simply use it in the urls
 
+Any similar view of course could be used, including rest framework, as long as they return json data in the standard [(id, name),] fashion
+
 .. code:: python
 
     ...

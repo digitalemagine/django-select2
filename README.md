@@ -14,7 +14,8 @@ What's different?
    It's possible and easy to keep the previous behaviour with a settings, but I didn't prepare a setting for it yet.
 2. PEP008 compliant imports
 3. Versioning with select2 version
-4. I just wanted to have it easy to update myself...
+4. Some more documentation
+5. I just wanted to have it easy to update myself...
 
 Installation
 ============
@@ -78,13 +79,13 @@ Full documentation available at http://django-select2.readthedocs.org/ (this is 
 More details
 ============
 
-More details can be found on the original blog at - http://blog.applegrew.com/2012/08/django-select2/.
+More details can be found on the original blog at - http://blog.applegrew.com/2012/08/django-select2/ which is now also included in the documentation.
 
 External Dependencies
 =====================
 
 * Django - This is obvious.
-* jQuery - This is not included in the package since it is expected that in most scenarios this would already be available.
+* jQuery - This is not included in the package since it is expected that in most scenarios it would already be available.
 * Memcached (python-memcached) - If you plan on running multiple python processes with `GENERATE_RANDOM_SELECT2_ID` enabled, then you need to turn on `ENABLE_SELECT2_MULTI_PROCESS_SUPPORT`. In that mode it is highly recommended that you use Memcached, to minimize DB hits.
 
 Example Application
